@@ -5,6 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./client/**/*.js ./server/**/*.js",
     "start": "node ./bin/www"
   },
   "author": "umatoma <umatomakun@gmail.com>",
@@ -15,5 +16,10 @@
     "debug": "^2.6.8",
     "express": "^4.15.3",
     "morgan": "^1.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0"
   }
 }
