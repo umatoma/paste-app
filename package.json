@@ -16,6 +16,7 @@
     "debug": "^2.6.8",
     "ejs": "^2.5.6",
     "express": "^4.15.3",
+    "fabric": "^1.7.14",
     "morgan": "^1.8.2"
   },
   "devDependencies": {
