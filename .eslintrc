@@ -1,6 +1,8 @@
 {
-  "extends": "airbnb-base",
+  "extends": "airbnb",
+  "parser": "babel-eslint",
   "globals": {
-    "fabric": true
+    "fabric": true,
+    "document": true
   }
 }
