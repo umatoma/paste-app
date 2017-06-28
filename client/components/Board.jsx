@@ -46,6 +46,11 @@ class Board extends React.Component {
       shadowOpacity: 0.5,
       draggable: true,
     });
+    box.setZIndex(Date.now());
+    box.on('mousedown', () => {
+      box.setZIndex(Date.now());
+      this.layer.draw();
+    });
     this.layer.add(box);
     this.layer.draw();
   }
