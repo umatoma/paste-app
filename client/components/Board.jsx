@@ -17,19 +17,6 @@ class Board extends React.Component {
     });
     this.layer = new Konva.Layer();
     this.stage.add(this.layer);
-
-    const box = new Konva.Rect({
-      x: 50,
-      y: 50,
-      width: 100,
-      height: 50,
-      fill: '#00D2FF',
-      stroke: 'black',
-      strokeWidth: 4,
-      draggable: true,
-    });
-    this.layer.add(box);
-    this.layer.draw();
     window.addEventListener('resize', this.handleWindowResize.bind(this));
   }
 
@@ -44,9 +31,53 @@ class Board extends React.Component {
     });
   }
 
+  addBox(fill) {
+    const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
+    const box = new Konva.Rect({
+      x: randomInt(100, 500),
+      y: randomInt(100, 500),
+      width: 100,
+      height: 100,
+      fill,
+      strokeEnabled: false,
+      shadowColor: 'gray',
+      shadowBlur: 4,
+      shadowOffset: { x: 2, y: 2 },
+      shadowOpacity: 0.5,
+      draggable: true,
+    });
+    this.layer.add(box);
+    this.layer.draw();
+  }
+
   render() {
     return (
-      <div ref={(element) => { this.container = element; }} />
+      <div>
+        <div ref={(element) => { this.container = element; }} />
+        <div style={{ position: 'fixed', top: 24, left: 24 }}>
+          <button
+            className="button is-info"
+            style={{ marginRight: 8 }}
+            onClick={() => this.addBox('hsl(217, 71%, 53%)')}
+          >
+            BLUE
+          </button>
+          <button
+            className="button is-success"
+            style={{ marginRight: 8 }}
+            onClick={() => this.addBox('hsl(141,71%, 48%)')}
+          >
+            GREEN
+          </button>
+          <button
+            className="button is-warning"
+            style={{ marginRight: 8 }}
+            onClick={() => this.addBox('hsl(48, 100%, 67%)')}
+          >
+            YELLOW
+          </button>
+        </div>
+      </div>
     );
   }
 }
