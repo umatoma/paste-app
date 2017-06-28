@@ -1,7 +1,9 @@
+import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
 
-class BoardCanvas {
+class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
+    super();
     this.stage = new Konva.Stage(stageOption);
     this.privateLayer = new Konva.Layer();
     this.publicLayer = new Konva.Layer();
@@ -39,13 +41,16 @@ class BoardCanvas {
         card.setOpacity(1.0);
         card.moveTo(this.publicLayer);
         this.stage.draw();
+        this.emit('card:movetopublic', card);
       } else {
         card.destroy();
         this.publicLayer.draw();
+        this.emit('card:destroy');
       }
     });
     this.privateLayer.add(card);
     this.privateLayer.draw();
+    this.emit('card:addprivate', card);
   }
 }
 

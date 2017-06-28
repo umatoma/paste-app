@@ -14,6 +14,15 @@ class Board extends React.Component {
       width: window.innerWidth,
       height: window.innerHeight,
     });
+    this.boardCanvas.on('card:addprivate', (card) => {
+      console.log('card:addprivate', card);
+    });
+    this.boardCanvas.on('card:movetopublic', (card) => {
+      console.log('card:movetopublic', card);
+    });
+    this.boardCanvas.on('card:destroy', () => {
+      console.log('card:destroy');
+    });
     window.addEventListener('resize', this.handleWindowResize.bind(this));
   }
 
