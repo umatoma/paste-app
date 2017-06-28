@@ -20,8 +20,8 @@ class Board extends React.Component {
     this.boardCanvas.on('card:movetopublic', (card) => {
       console.log('card:movetopublic', card);
     });
-    this.boardCanvas.on('card:destroy', () => {
-      console.log('card:destroy');
+    this.boardCanvas.on('card:destroy', (id) => {
+      console.log('card:destroy', id);
     });
     window.addEventListener('resize', this.handleWindowResize.bind(this));
   }

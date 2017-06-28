@@ -1,5 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
+import uuidv4 from 'uuid/v4';
 
 class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
@@ -17,6 +18,7 @@ class BoardCanvas extends EventEmitter {
 
   addPrivateCard(x, y, fill) {
     const card = new Konva.Rect({
+      id: uuidv4(),
       x,
       y,
       fill,
@@ -43,9 +45,10 @@ class BoardCanvas extends EventEmitter {
         this.stage.draw();
         this.emit('card:movetopublic', card);
       } else {
+        const id = card.id();
         card.destroy();
         this.publicLayer.draw();
-        this.emit('card:destroy');
+        this.emit('card:destroy', id);
       }
     });
     this.privateLayer.add(card);
