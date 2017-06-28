@@ -6,7 +6,7 @@ class Board extends React.Component {
     super();
     this.container = null;
     this.stage = null;
-    this.layer = null;
+    this.publicLayer = null;
   }
 
   componentDidMount() {
@@ -15,8 +15,10 @@ class Board extends React.Component {
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    this.layer = new Konva.Layer();
-    this.stage.add(this.layer);
+    this.privateLayer = new Konva.Layer();
+    this.publicLayer = new Konva.Layer();
+    this.stage.add(this.privateLayer);
+    this.stage.add(this.publicLayer);
     window.addEventListener('resize', this.handleWindowResize.bind(this));
   }
 
@@ -39,6 +41,7 @@ class Board extends React.Component {
       width: 100,
       height: 100,
       fill,
+      opacity: 0.5,
       strokeEnabled: false,
       shadowColor: 'gray',
       shadowBlur: 4,
@@ -49,10 +52,21 @@ class Board extends React.Component {
     box.setZIndex(Date.now());
     box.on('mousedown', () => {
       box.setZIndex(Date.now());
-      this.layer.draw();
+      box.getLayer().draw();
     });
-    this.layer.add(box);
-    this.layer.draw();
+    box.on('dblclick', () => {
+      const layer = box.getLayer();
+      if (layer === this.privateLayer) {
+        box.setOpacity(1.0);
+        box.moveTo(this.publicLayer);
+        this.stage.draw();
+      } else {
+        box.destroy();
+        this.publicLayer.draw();
+      }
+    });
+    this.privateLayer.add(box);
+    this.privateLayer.draw();
   }
 
   render() {
