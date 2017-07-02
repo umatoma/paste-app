@@ -50,41 +50,44 @@ class Board extends React.Component {
     return (
       <div>
         <div ref={(element) => { this.container = element; }} />
-        <div style={{ position: 'fixed', bottom: 12, left: 24 }}>
+        <div style={{ position: 'fixed', bottom: 24, left: 24 }}>
           <div className="field">
-            <label className="label" htmlFor="card">Message</label>
-            <p className="control">
+            <label className="label" htmlFor="card">Card Message</label>
+            <p className="control" style={{ width: 320 }}>
               <textarea
                 name="card"
                 className="textarea"
-                placeholder="Textarea"
+                placeholder="..."
                 value={this.state.cardMessage}
                 onChange={event => this.setState({ cardMessage: event.target.value })}
               />
             </p>
           </div>
-          <div>
-            <button
-              className="button is-info"
-              style={{ marginRight: 8 }}
-              onClick={() => this.addPrivateCard('hsl(217, 71%, 53%)')}
-            >
-              BLUE
-            </button>
-            <button
-              className="button is-success"
-              style={{ marginRight: 8 }}
-              onClick={() => this.addPrivateCard('hsl(141,71%, 48%)')}
-            >
-              GREEN
-            </button>
-            <button
-              className="button is-warning"
-              style={{ marginRight: 8 }}
-              onClick={() => this.addPrivateCard('hsl(48, 100%, 67%)')}
-            >
-              YELLOW
-            </button>
+          <div className="columns">
+            <div className="column">
+              <button
+                className="button is-fullwidth is-info"
+                onClick={() => this.addPrivateCard('hsl(217, 71%, 53%)')}
+              >
+                BLUE
+              </button>
+            </div>
+            <div className="column">
+              <button
+                className="button is-fullwidth is-success"
+                onClick={() => this.addPrivateCard('hsl(141,71%, 48%)')}
+              >
+                GREEN
+              </button>
+            </div>
+            <div className="column">
+              <button
+                className="button is-fullwidth is-warning"
+                onClick={() => this.addPrivateCard('hsl(48, 100%, 67%)')}
+              >
+                YELLOW
+              </button>
+            </div>
           </div>
         </div>
       </div>
