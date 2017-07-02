@@ -43,6 +43,7 @@ class Board extends React.Component {
     const x = randomInt(100, 500);
     const y = randomInt(100, 500);
     this.boardCanvas.addPrivateCard(message, x, y, fill);
+    this.setState({ cardMessage: '' });
   }
 
   render() {
