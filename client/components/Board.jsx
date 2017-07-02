@@ -1,5 +1,5 @@
 import React from 'react';
-import BoardCanvas from './board-canvas';
+import { BoardCanvas } from '../canvas';
 
 class Board extends React.Component {
   constructor() {
