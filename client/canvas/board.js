@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
-import uuidv4 from 'uuid/v4';
+import { createCard } from './shape-factory';
 
 class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
@@ -17,22 +17,7 @@ class BoardCanvas extends EventEmitter {
   }
 
   addPrivateCard(x, y, fill) {
-    const card = new Konva.Rect({
-      id: uuidv4(),
-      x,
-      y,
-      fill,
-      width: 100,
-      height: 100,
-      opacity: 0.5,
-      strokeEnabled: false,
-      shadowColor: 'gray',
-      shadowBlur: 4,
-      shadowOffset: { x: 2, y: 2 },
-      shadowOpacity: 0.5,
-      draggable: true,
-    });
-    card.setZIndex(Date.now());
+    const card = createCard({ x, y, fill });
     card.on('mousedown', () => {
       card.setZIndex(Date.now());
       card.getLayer().draw();
