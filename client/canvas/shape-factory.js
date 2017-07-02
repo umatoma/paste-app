@@ -2,12 +2,17 @@ import Konva from 'konva';
 import uuidv4 from 'uuid/v4';
 
 const imageDelete = new Image();
+const imageShare = new Image();
+const setCursorStyle = (shape, style) => {
+  shape.getStage().container().style.cursor = style; // eslint-disable-line no-param-reassign
+};
 
 export function loadImages() {
-  imageDelete.onload = () => {
-    console.log('onload:imageDelete');
-  };
+  imageDelete.onload = () => { console.log('onload:imageDelete'); };
   imageDelete.src = '/delete.png';
+
+  imageShare.onload = () => { console.log('onload:imageShare'); };
+  imageShare.src = '/share.png';
 }
 
 export function createCard(config, listeners = {}) {
@@ -29,44 +34,51 @@ export function createCard(config, listeners = {}) {
     shadowOpacity: 0.5,
   });
 
-  const menuSize = 16;
-  const menu = new Konva.Image({
-    x: (config.x + card.width()) - (menuSize + 4),
-    y: (config.y + card.height()) - (menuSize + 4),
-    width: menuSize,
-    height: menuSize,
+  const iconSize = 16;
+  const iconPadding = 4;
+  const del = new Konva.Image({
+    x: (config.x + card.width()) - (iconSize + iconPadding),
+    y: (config.y + card.height()) - (iconSize + iconPadding),
+    width: iconSize,
+    height: iconSize,
     image: imageDelete,
+  });
+  const share = new Konva.Image({
+    x: config.x + iconPadding,
+    y: (config.y + card.height()) - (iconSize + iconPadding),
+    width: iconSize,
+    height: iconSize,
+    image: imageShare,
   });
 
   group.add(card);
-  group.add(menu);
+  group.add(del);
+  group.add(share);
   group.setZIndex(Date.now());
 
-  card.on('mouseenter', () => {
-    card.getStage().container().style.cursor = 'move';
-  });
-  card.on('mouseleave', () => {
-    card.getStage().container().style.cursor = 'default';
-  });
+  card.on('mouseenter', () => setCursorStyle(group, 'move'));
+  card.on('mouseleave', () => setCursorStyle(group, 'default'));
   card.on('mousedown', () => {
     group.setZIndex(Date.now());
     group.getLayer().draw();
   });
-  card.on('dblclick', listeners.movetopublic);
-  menu.on('mouseenter', () => {
-    menu.getStage().container().style.cursor = 'pointer';
-  });
-  menu.on('mouseleave', () => {
-    menu.getStage().container().style.cursor = 'default';
-  });
-  menu.on('click', () => {
+  del.on('mouseenter', () => setCursorStyle(group, 'pointer'));
+  del.on('mouseleave', () => setCursorStyle(group, 'default'));
+  del.on('click', () => {
     const id = group.id();
-    menu.off('mouseenter');
-    menu.off('mouseleave');
+    del.off('mouseenter mouseleave');
+    share.off('mouseenter mouseleave');
     group.getStage().container().style.cursor = 'default';
     group.destroyChildren();
     group.destroy();
     listeners.destroyed(id);
+  });
+  share.on('mouseenter', () => setCursorStyle(group, 'pointer'));
+  share.on('mouseleave', () => setCursorStyle(group, 'default'));
+  share.on('click', () => {
+    group.setOpacity(1.0);
+    share.remove();
+    listeners.public();
   });
 
   return group;

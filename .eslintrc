@@ -4,6 +4,7 @@
   "globals": {
     "fabric": true,
     "document": true,
-    "window": true
+    "window": true,
+    "Image": true
   }
 }

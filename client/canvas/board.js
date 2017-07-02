@@ -19,8 +19,7 @@ class BoardCanvas extends EventEmitter {
 
   addPrivateCard(x, y, fill) {
     const card = createCard({ x, y, fill }, {
-      movetopublic: () => {
-        card.setOpacity(1.0);
+      public: () => {
         card.moveTo(this.publicLayer);
         this.stage.draw();
         this.emit('card:movetopublic', card);
