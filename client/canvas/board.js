@@ -18,23 +18,15 @@ class BoardCanvas extends EventEmitter {
 
   addPrivateCard(x, y, fill) {
     const card = createCard({ x, y, fill }, {
-      mousedown: () => {
-        card.setZIndex(Date.now());
-        card.getLayer().draw();
+      movetopublic: () => {
+        card.setOpacity(1.0);
+        card.moveTo(this.publicLayer);
+        this.stage.draw();
+        this.emit('card:movetopublic', card);
       },
-      dblclick: () => {
-        const layer = card.getLayer();
-        if (layer === this.privateLayer) {
-          card.setOpacity(1.0);
-          card.moveTo(this.publicLayer);
-          this.stage.draw();
-          this.emit('card:movetopublic', card);
-        } else {
-          const id = card.id();
-          card.destroy();
-          this.publicLayer.draw();
-          this.emit('card:destroy', id);
-        }
+      destroyed: (id) => {
+        this.publicLayer.draw();
+        this.emit('card:destroy', id);
       },
     });
     this.privateLayer.add(card);
