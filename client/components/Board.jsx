@@ -6,6 +6,9 @@ class Board extends React.Component {
     super();
     this.container = null;
     this.boardCanvas = null;
+    this.state = {
+      cardMessage: '',
+    };
   }
 
   componentDidMount() {
@@ -36,9 +39,10 @@ class Board extends React.Component {
 
   addPrivateCard(fill) {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
+    const message = this.state.cardMessage;
     const x = randomInt(100, 500);
     const y = randomInt(100, 500);
-    this.boardCanvas.addPrivateCard(x, y, fill);
+    this.boardCanvas.addPrivateCard(message, x, y, fill);
   }
 
   render() {
@@ -49,7 +53,13 @@ class Board extends React.Component {
           <div className="field">
             <label className="label" htmlFor="card">Message</label>
             <p className="control">
-              <textarea name="card" className="textarea" placeholder="Textarea" />
+              <textarea
+                name="card"
+                className="textarea"
+                placeholder="Textarea"
+                value={this.state.cardMessage}
+                onChange={event => this.setState({ cardMessage: event.target.value })}
+              />
             </p>
           </div>
           <div>

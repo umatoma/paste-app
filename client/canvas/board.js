@@ -17,8 +17,7 @@ class BoardCanvas extends EventEmitter {
     this.stage.setAttrs({ width, height });
   }
 
-  addPrivateCard(x, y, fill) {
-    const message = 'hoge';
+  addPrivateCard(message, x, y, fill) {
     const card = createCard(message, { x, y, fill }, {
       public: () => {
         card.moveTo(this.publicLayer);
