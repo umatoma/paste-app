@@ -45,28 +45,36 @@ class Board extends React.Component {
     return (
       <div>
         <div ref={(element) => { this.container = element; }} />
-        <div style={{ position: 'fixed', top: 24, left: 24 }}>
-          <button
-            className="button is-info"
-            style={{ marginRight: 8 }}
-            onClick={() => this.addPrivateCard('hsl(217, 71%, 53%)')}
-          >
-            BLUE
-          </button>
-          <button
-            className="button is-success"
-            style={{ marginRight: 8 }}
-            onClick={() => this.addPrivateCard('hsl(141,71%, 48%)')}
-          >
-            GREEN
-          </button>
-          <button
-            className="button is-warning"
-            style={{ marginRight: 8 }}
-            onClick={() => this.addPrivateCard('hsl(48, 100%, 67%)')}
-          >
-            YELLOW
-          </button>
+        <div style={{ position: 'fixed', bottom: 12, left: 24 }}>
+          <div className="field">
+            <label className="label" htmlFor="card">Message</label>
+            <p className="control">
+              <textarea name="card" className="textarea" placeholder="Textarea" />
+            </p>
+          </div>
+          <div>
+            <button
+              className="button is-info"
+              style={{ marginRight: 8 }}
+              onClick={() => this.addPrivateCard('hsl(217, 71%, 53%)')}
+            >
+              BLUE
+            </button>
+            <button
+              className="button is-success"
+              style={{ marginRight: 8 }}
+              onClick={() => this.addPrivateCard('hsl(141,71%, 48%)')}
+            >
+              GREEN
+            </button>
+            <button
+              className="button is-warning"
+              style={{ marginRight: 8 }}
+              onClick={() => this.addPrivateCard('hsl(48, 100%, 67%)')}
+            >
+              YELLOW
+            </button>
+          </div>
         </div>
       </div>
     );
