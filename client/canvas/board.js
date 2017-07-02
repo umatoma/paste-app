@@ -6,7 +6,9 @@ class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
     super();
     loadImages();
-    this.stage = new Konva.Stage(stageOption);
+    this.stage = new Konva.Stage(Object.assign({
+      draggable: true,
+    }, stageOption));
     this.privateLayer = new Konva.Layer();
     this.publicLayer = new Konva.Layer();
     this.stage.add(this.privateLayer);
