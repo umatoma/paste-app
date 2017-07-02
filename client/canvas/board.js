@@ -25,7 +25,7 @@ class BoardCanvas extends EventEmitter {
         this.emit('card:movetopublic', card);
       },
       destroyed: (id) => {
-        this.publicLayer.draw();
+        this.stage.draw();
         this.emit('card:destroy', id);
       },
     });
