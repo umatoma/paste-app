@@ -1,10 +1,11 @@
 import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
-import { createCard } from './shape-factory';
+import { loadImages, createCard } from './shape-factory';
 
 class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
     super();
+    loadImages();
     this.stage = new Konva.Stage(stageOption);
     this.privateLayer = new Konva.Layer();
     this.publicLayer = new Konva.Layer();
