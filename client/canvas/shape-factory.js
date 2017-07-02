@@ -1,7 +1,7 @@
 import Konva from 'konva';
 import uuidv4 from 'uuid/v4';
 
-export function createCard(config) {
+export function createCard(config, listeners = {}) {
   const card = new Konva.Rect(Object.assign({
     id: uuidv4(),
     width: 100,
@@ -15,5 +15,10 @@ export function createCard(config) {
     draggable: true,
   }, config));
   card.setZIndex(Date.now());
+
+  Object.keys(listeners).forEach((event) => {
+    card.on(event, listeners[event]);
+  });
+
   return card;
 }
