@@ -6,5 +6,8 @@
     "document": true,
     "window": true,
     "Image": true
+  },
+  "rules": {
+    "no-console": "off"
   }
 }

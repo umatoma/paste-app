@@ -35,6 +35,28 @@ class BoardCanvas extends EventEmitter {
     this.privateLayer.draw();
     this.emit('card:addprivate', card);
   }
+
+  zoom(newScale) {
+    const stage = this.stage;
+    const oldScale = stage.scaleX();
+    const oldCenterX = ((stage.x() / oldScale) + (stage.getWidth() / 2.0)) * oldScale;
+    const oldCenterY = ((stage.y() / oldScale) + (stage.getHeight() / 2.0)) * oldScale;
+    const newCenterX = (oldCenterX / oldScale) - (stage.x() / oldScale);
+    const newCenterY = (oldCenterY / oldScale) - (stage.y() / oldScale);
+    const posX = ((oldCenterX / newScale) - newCenterX) * newScale;
+    const posY = ((oldCenterY / newScale) - newCenterY) * newScale;
+    stage.scale({ x: newScale, y: newScale });
+    stage.position({ x: posX, y: posY });
+    stage.draw();
+  }
+
+  zoomInStage() {
+    this.zoom(this.stage.scaleX() + 0.1);
+  }
+
+  zoomOutStage() {
+    this.zoom(this.stage.scaleX() - 0.1);
+  }
 }
 
 export default BoardCanvas;

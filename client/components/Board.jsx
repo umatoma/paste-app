@@ -46,28 +46,26 @@ class Board extends React.Component {
     this.setState({ cardMessage: '' });
   }
 
-  zoomInStage() {
-    console.log('board:zoomin');
-  }
-
-  zoomOutStage() {
-    console.log('board:zoomout');
-  }
-
   render() {
     return (
       <div>
         <div ref={(element) => { this.container = element; }} />
         <div style={{ position: 'fixed', top: 24, left: 24 }}>
           <div className="field">
-            <button className="button is-medium" onClick={() => this.zoomInStage()}>
+            <button
+              className="button is-medium"
+              onClick={() => this.boardCanvas.zoomInStage()}
+            >
               <span className="icon is-medium">
                 <i className="fa fa-plus" />
               </span>
             </button>
           </div>
           <div className="field">
-            <button className="button is-medium" onClick={() => this.zoomOutStage()}>
+            <button
+              className="button is-medium"
+              onClick={() => this.boardCanvas.zoomOutStage()}
+            >
               <span className="icon is-medium">
                 <i className="fa fa-minus" />
               </span>
