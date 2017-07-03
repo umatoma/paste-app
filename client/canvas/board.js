@@ -45,16 +45,13 @@ class BoardCanvas extends EventEmitter {
       return;
     }
     const stage = this.stage;
-    const oldScale = stage.scaleX();
-    const oldCenterX = ((stage.x() / oldScale) + (stage.getWidth() / 2.0)) * oldScale;
-    const oldCenterY = ((stage.y() / oldScale) + (stage.getHeight() / 2.0)) * oldScale;
-    const newCenterX = (oldCenterX / oldScale) - (stage.x() / oldScale);
-    const newCenterY = (oldCenterY / oldScale) - (stage.y() / oldScale);
-    const posX = ((oldCenterX / newScale) - newCenterX) * newScale;
-    const posY = ((oldCenterY / newScale) - newCenterY) * newScale;
+    const x = ((stage.getWidth() / 2.0) - stage.position().x) / stage.scaleX();
+    const y = ((stage.getHeight() / 2.0) - stage.position().y) / stage.scaleX();
+    const posX = ((stage.getWidth() / 2.0) - (x * newScale));
+    const posY = ((stage.getHeight() / 2.0) - (y * newScale));
     stage.scale({ x: newScale, y: newScale });
     stage.position({ x: posX, y: posY });
-    stage.draw();
+    stage.batchDraw();
   }
 
   zoomInStage() {
