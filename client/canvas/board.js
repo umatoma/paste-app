@@ -2,6 +2,10 @@ import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
 import { loadImages, createCard } from './shape-factory';
 
+const SCALE_STEP = 0.1;
+const MAX_SCALE = 2.0;
+const MIN_SCALE = 0.5;
+
 class BoardCanvas extends EventEmitter {
   constructor(stageOption = {}) {
     super();
@@ -37,6 +41,9 @@ class BoardCanvas extends EventEmitter {
   }
 
   zoom(newScale) {
+    if (newScale > MAX_SCALE || newScale < MIN_SCALE) {
+      return;
+    }
     const stage = this.stage;
     const oldScale = stage.scaleX();
     const oldCenterX = ((stage.x() / oldScale) + (stage.getWidth() / 2.0)) * oldScale;
@@ -51,11 +58,11 @@ class BoardCanvas extends EventEmitter {
   }
 
   zoomInStage() {
-    this.zoom(this.stage.scaleX() + 0.1);
+    this.zoom(this.stage.scaleX() + SCALE_STEP);
   }
 
   zoomOutStage() {
-    this.zoom(this.stage.scaleX() - 0.1);
+    this.zoom(this.stage.scaleX() - SCALE_STEP);
   }
 }
 
