@@ -22,7 +22,13 @@ class BoardCanvas extends EventEmitter {
     this.stage.setAttrs({ width, height });
   }
 
-  addPrivateCard(message, x, y, fill) {
+  // TODO: 初回描画位置に規則性を持たせる
+  addPrivateCard(message, fill) {
+    const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
+    const stage = this.stage;
+    const scale = stage.scaleX();
+    const x = (randomInt(24, 224) - stage.position().x) / scale;
+    const y = (randomInt(24, stage.getHeight() - 376) - stage.position().y) / scale;
     const card = createCard(message, { x, y, fill }, {
       public: () => {
         card.moveTo(this.publicLayer);

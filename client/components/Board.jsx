@@ -38,11 +38,8 @@ class Board extends React.Component {
   }
 
   addPrivateCard(fill) {
-    const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const message = this.state.cardMessage;
-    const x = randomInt(100, 500);
-    const y = randomInt(100, 500);
-    this.boardCanvas.addPrivateCard(message, x, y, fill);
+    this.boardCanvas.addPrivateCard(message, fill);
     this.setState({ cardMessage: '' });
   }
 
