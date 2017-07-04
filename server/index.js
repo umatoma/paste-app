@@ -42,8 +42,12 @@ module.exports.createServer = (http) => {
   });
 
   // WebSocket
-  io.on('connection', () => {
+  io.on('connection', (socket) => {
     console.log('a user connected');
+
+    socket.on('card:dragmove', (...args) => {
+      socket.broadcast.emit('card:dragmove', ...args);
+    });
   });
 
   return server;

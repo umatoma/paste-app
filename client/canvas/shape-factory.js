@@ -83,6 +83,14 @@ export function createCard(message, config, listeners = {}) {
   share.on('mouseleave', () => setCursorStyle(group, 'default'));
   share.on('click', () => {
     group.setOpacity(1.0);
+    group.on('dragmove', () => listeners.dragmove({
+      id: group.id(),
+      x: group.x(),
+      y: group.y(),
+      zIndex: group.getZIndex(),
+      fill: card.fill(),
+      text: text.text(),
+    }));
     share.remove();
     listeners.public();
   });

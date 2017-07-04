@@ -19,9 +19,27 @@ class BoardCanvas extends EventEmitter {
     this.stage.add(this.publicLayer, this.privateLayer);
 
     // WebSocket
-    this.socket = io('http://localhost:3000');
+    this.socket = io();
     this.socket.on('connect', () => {
       console.log(`connect ${this.socket.id}`);
+    });
+    this.socket.on('card:dragmove', (attrs) => {
+      const node = this.stage.findOne(`#${attrs.id}`);
+      if (node) {
+        node.setAttrs(attrs);
+      } else {
+        const card = new Konva.Rect(Object.assign({
+          width: 128,
+          height: 128,
+          strokeEnabled: false,
+          shadowColor: 'gray',
+          shadowBlur: 4,
+          shadowOffset: { x: 2, y: 2 },
+          shadowOpacity: 0.5,
+        }, attrs));
+        this.publicLayer.add(card);
+      }
+      this.publicLayer.batchDraw();
     });
   }
 
@@ -34,9 +52,12 @@ class BoardCanvas extends EventEmitter {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const stage = this.stage;
     const scale = stage.scaleX();
-    const x = (randomInt(24, 224) - stage.position().x) / scale;
-    const y = (randomInt(24, stage.getHeight() - 376) - stage.position().y) / scale;
-    const card = createCard(message, { x, y, fill }, {
+    const posX = (randomInt(24, 224) - stage.position().x) / scale;
+    const posY = (randomInt(24, stage.getHeight() - 376) - stage.position().y) / scale;
+    const card = createCard(message, { x: posX, y: posY, fill }, {
+      dragmove: (attrs) => {
+        this.socket.emit('card:dragmove', attrs);
+      },
       public: () => {
         card.moveTo(this.publicLayer);
         this.stage.draw();
