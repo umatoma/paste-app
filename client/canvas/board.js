@@ -15,8 +15,7 @@ class BoardCanvas extends EventEmitter {
     }, stageOption));
     this.privateLayer = new Konva.Layer();
     this.publicLayer = new Konva.Layer();
-    this.stage.add(this.privateLayer);
-    this.stage.add(this.publicLayer);
+    this.stage.add(this.publicLayer, this.privateLayer);
   }
 
   setStageSize(width, height) {
