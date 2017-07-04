@@ -1,5 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
+import io from 'socket.io-client';
 import { loadImages, createCard } from './shape-factory';
 
 const SCALE_STEP = 0.1;
@@ -16,6 +17,12 @@ class BoardCanvas extends EventEmitter {
     this.privateLayer = new Konva.Layer();
     this.publicLayer = new Konva.Layer();
     this.stage.add(this.publicLayer, this.privateLayer);
+
+    // WebSocket
+    this.socket = io('http://localhost:3000');
+    this.socket.on('connect', () => {
+      console.log(`connect ${this.socket.id}`);
+    });
   }
 
   setStageSize(width, height) {
