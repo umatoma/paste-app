@@ -7,12 +7,12 @@ const setCursorStyle = (shape, style) => {
   shape.getStage().container().style.cursor = style; // eslint-disable-line no-param-reassign
 };
 
-function createCard(message, config, listeners, isPublic) {
+function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
   const padding = 4;
   const group = new Konva.Group({
-    id: config.id || uuidv4(),
-    x: config.x,
-    y: config.y,
+    id: id || uuidv4(),
+    x,
+    y,
     width: 128,
     height: 128,
     draggable: true,
@@ -21,7 +21,7 @@ function createCard(message, config, listeners, isPublic) {
   const card = new Konva.Rect({
     x: 0,
     y: 0,
-    fill: config.fill,
+    fill,
     width: 128,
     height: 128,
     strokeEnabled: false,
@@ -30,8 +30,8 @@ function createCard(message, config, listeners, isPublic) {
     shadowOffset: { x: 2, y: 2 },
     shadowOpacity: 0.5,
   });
-  const text = new Konva.Text({
-    text: message,
+  const message = new Konva.Text({
+    text,
     x: card.x() + padding,
     y: card.y() + padding,
     width: card.width() - (padding * 2),
@@ -62,12 +62,12 @@ function createCard(message, config, listeners, isPublic) {
       y: group.y(),
       zIndex: group.getZIndex(),
       fill: card.fill(),
-      text: text.text(),
+      text: message.text(),
     }));
   };
 
-  group.add(card, text, del, share);
-  group.setZIndex(config.zIndex || Date.now());
+  group.add(card, message, del, share);
+  group.setZIndex(zIndex || Date.now());
 
   card.on('mouseenter', () => setCursorStyle(group, 'move'));
   card.on('mouseleave', () => setCursorStyle(group, 'default'));
@@ -78,13 +78,13 @@ function createCard(message, config, listeners, isPublic) {
   del.on('mouseenter', () => setCursorStyle(group, 'pointer'));
   del.on('mouseleave', () => setCursorStyle(group, 'default'));
   del.on('click', () => {
-    const id = group.id();
+    const _id = group.id(); // eslint-disable-line
     del.off('mouseenter mouseleave');
     share.off('mouseenter mouseleave');
     group.getStage().container().style.cursor = 'default';
     group.destroyChildren();
     group.destroy();
-    listeners.destroyed(id);
+    listeners.destroyed(_id);
   });
   share.on('mouseenter', () => setCursorStyle(group, 'pointer'));
   share.on('mouseleave', () => setCursorStyle(group, 'default'));
@@ -97,7 +97,7 @@ function createCard(message, config, listeners, isPublic) {
       y: group.y(),
       zIndex: group.getZIndex(),
       fill: card.fill(),
-      text: text.text(),
+      text: message.text(),
     }, group);
   });
 
@@ -117,10 +117,10 @@ export function loadImages() {
   imageShare.src = '/share.png';
 }
 
-export function createPublicCard(message, config, listeners) {
-  return createCard(message, config, listeners, true);
+export function createPublicCard(config, listeners) {
+  return createCard(config, listeners, true);
 }
 
-export function createPrivateCard(message, config, listeners) {
-  return createCard(message, config, listeners, false);
+export function createPrivateCard(config, listeners) {
+  return createCard(config, listeners, false);
 }

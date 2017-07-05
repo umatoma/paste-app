@@ -43,7 +43,7 @@ class BoardCanvas extends EventEmitter {
     if (node) {
       node.setAttrs({ x, y, zIndex });
     } else {
-      const card = createPublicCard(text, { id, x, y, zIndex, fill }, {
+      const card = createPublicCard({ id, x, y, zIndex, fill, text }, {
         dragmove: this.handleCardDragmove.bind(this),
         public: this.handleCardPublic.bind(this),
         destroyed: this.handleCardDestroyed.bind(this),
@@ -74,13 +74,13 @@ class BoardCanvas extends EventEmitter {
   }
 
   // TODO: 初回描画位置に規則性を持たせる
-  addPrivateCard(message, fill) {
+  addPrivateCard(text, fill) {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const stage = this.stage;
     const scale = stage.scaleX();
-    const posX = (randomInt(24, 224) - stage.position().x) / scale;
-    const posY = (randomInt(24, stage.getHeight() - 276) - stage.position().y) / scale;
-    const card = createPrivateCard(message, { x: posX, y: posY, fill }, {
+    const x = (randomInt(24, 224) - stage.position().x) / scale;
+    const y = (randomInt(24, stage.getHeight() - 276) - stage.position().y) / scale;
+    const card = createPrivateCard({ x, y, fill, text }, {
       dragmove: this.handleCardDragmove.bind(this),
       public: this.handleCardPublic.bind(this),
       destroyed: this.handleCardDestroyed.bind(this),
