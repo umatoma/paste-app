@@ -1,16 +1,23 @@
 import Konva from 'konva';
 import uuidv4 from 'uuid/v4';
 
+const CARD_TYPES = {
+  blue: { fill: 'hsl(217, 71%, 53%)' },
+  green: { fill: 'hsl(141,71%, 48%)' },
+  red: { fill: 'hsl(48, 100%, 67%)' },
+};
+
 const imageDelete = new Image();
 const imageShare = new Image();
 const setCursorStyle = (shape, style) => {
   shape.getStage().container().style.cursor = style; // eslint-disable-line no-param-reassign
 };
 
-function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
+function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
   const padding = 4;
   const group = new Konva.Group({
     id: id || uuidv4(),
+    name: type,
     x,
     y,
     width: 128,
@@ -21,7 +28,7 @@ function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
   const card = new Konva.Rect({
     x: 0,
     y: 0,
-    fill,
+    fill: CARD_TYPES[type].fill,
     width: 128,
     height: 128,
     strokeEnabled: false,
@@ -36,6 +43,7 @@ function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
     y: card.y() + padding,
     width: card.width() - (padding * 2),
     height: card.height() - (padding * 2),
+    fill: 'hsl(0, 0%, 29%)',
     listening: false,
   });
 
@@ -61,7 +69,7 @@ function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
       x: group.x(),
       y: group.y(),
       zIndex: group.getZIndex(),
-      fill: card.fill(),
+      type: group.name(),
       text: message.text(),
     }));
   };
@@ -96,7 +104,7 @@ function createCard({ id, x, y, fill, zIndex, text }, listeners, isPublic) {
       x: group.x(),
       y: group.y(),
       zIndex: group.getZIndex(),
-      fill: card.fill(),
+      type: group.name(),
       text: message.text(),
     }, group);
   });

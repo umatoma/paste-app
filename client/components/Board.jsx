@@ -37,9 +37,9 @@ class Board extends React.Component {
     this.boardCanvas.setStageSize(window.innerWidth, window.innerHeight);
   }
 
-  addPrivateCard(fill) {
+  addPrivateCard(type) {
     const message = this.state.cardMessage;
-    this.boardCanvas.addPrivateCard(message, fill);
+    this.boardCanvas.addPrivateCard(message, type);
     this.setState({ cardMessage: '' });
   }
 
@@ -86,7 +86,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-info"
-                onClick={() => this.addPrivateCard('hsl(217, 71%, 53%)')}
+                onClick={() => this.addPrivateCard('blue')}
               >
                 BLUE
               </button>
@@ -94,7 +94,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-success"
-                onClick={() => this.addPrivateCard('hsl(141,71%, 48%)')}
+                onClick={() => this.addPrivateCard('green')}
               >
                 GREEN
               </button>
@@ -102,7 +102,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-warning"
-                onClick={() => this.addPrivateCard('hsl(48, 100%, 67%)')}
+                onClick={() => this.addPrivateCard('red')}
               >
                 YELLOW
               </button>

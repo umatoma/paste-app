@@ -25,10 +25,11 @@ class BoardCanvas extends EventEmitter {
     this.socket.on('card:dragmove', this.handleEmitCardDragmove.bind(this));
   }
 
-  handleEmitCardCreate({ id, x, y, zIndex, fill, text }) {
+  handleEmitCardCreate({ id, x, y, zIndex, type, text }) {
+    console.log('card:create', { id, x, y, zIndex, type, text });
     const node = this.stage.findOne(`#${id}`);
     if (!node) {
-      const card = createPublicCard(text, { id, x, y, zIndex, fill }, {
+      const card = createPublicCard({ id, x, y, zIndex, type, text }, {
         dragmove: this.handleCardDragmove.bind(this),
         public: this.handleCardPublic.bind(this),
         destroyed: this.handleCardDestroyed.bind(this),
@@ -38,12 +39,13 @@ class BoardCanvas extends EventEmitter {
     }
   }
 
-  handleEmitCardDragmove({ id, x, y, zIndex, fill, text }) {
+  handleEmitCardDragmove({ id, x, y, zIndex, type, text }) {
+    console.log('card:dragmove', { id, x, y, zIndex, type, text });
     const node = this.stage.findOne(`#${id}`);
     if (node) {
       node.setAttrs({ x, y, zIndex });
     } else {
-      const card = createPublicCard({ id, x, y, zIndex, fill, text }, {
+      const card = createPublicCard({ id, x, y, zIndex, type, text }, {
         dragmove: this.handleCardDragmove.bind(this),
         public: this.handleCardPublic.bind(this),
         destroyed: this.handleCardDestroyed.bind(this),
@@ -74,13 +76,13 @@ class BoardCanvas extends EventEmitter {
   }
 
   // TODO: 初回描画位置に規則性を持たせる
-  addPrivateCard(text, fill) {
+  addPrivateCard(text, type) {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const stage = this.stage;
     const scale = stage.scaleX();
     const x = (randomInt(24, 224) - stage.position().x) / scale;
     const y = (randomInt(24, stage.getHeight() - 276) - stage.position().y) / scale;
-    const card = createPrivateCard({ x, y, fill, text }, {
+    const card = createPrivateCard({ x, y, type, text }, {
       dragmove: this.handleCardDragmove.bind(this),
       public: this.handleCardPublic.bind(this),
       destroyed: this.handleCardDestroyed.bind(this),
