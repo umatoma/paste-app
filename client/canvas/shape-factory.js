@@ -13,12 +13,14 @@ function createCard(message, config, listeners, isPublic) {
     id: config.id || uuidv4(),
     x: config.x,
     y: config.y,
+    width: 128,
+    height: 128,
     draggable: true,
     opacity: 0.5,
   });
   const card = new Konva.Rect({
-    x: config.x,
-    y: config.y,
+    x: 0,
+    y: 0,
     fill: config.fill,
     width: 128,
     height: 128,

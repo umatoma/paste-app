@@ -78,8 +78,8 @@ class BoardCanvas extends EventEmitter {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const stage = this.stage;
     const scale = stage.scaleX();
-    const posX = (randomInt(24, 124) - stage.position().x) / scale;
-    const posY = (randomInt(24, stage.getHeight() - 476) - stage.position().y) / scale;
+    const posX = (randomInt(24, 224) - stage.position().x) / scale;
+    const posY = (randomInt(24, stage.getHeight() - 276) - stage.position().y) / scale;
     const card = createPrivateCard(message, { x: posX, y: posY, fill }, {
       dragmove: this.handleCardDragmove.bind(this),
       public: this.handleCardPublic.bind(this),
