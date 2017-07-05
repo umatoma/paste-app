@@ -7,18 +7,12 @@ const setCursorStyle = (shape, style) => {
   shape.getStage().container().style.cursor = style; // eslint-disable-line no-param-reassign
 };
 
-export function loadImages() {
-  imageDelete.onload = () => { console.log('onload:imageDelete'); };
-  imageDelete.src = '/delete.png';
-
-  imageShare.onload = () => { console.log('onload:imageShare'); };
-  imageShare.src = '/share.png';
-}
-
-export function createCard(message, config, listeners = {}) {
+function createCard(message, config, listeners, isPublic) {
   const padding = 4;
   const group = new Konva.Group({
-    id: uuidv4(),
+    id: config.id || uuidv4(),
+    x: config.x,
+    y: config.y,
     draggable: true,
     opacity: 0.5,
   });
@@ -36,8 +30,8 @@ export function createCard(message, config, listeners = {}) {
   });
   const text = new Konva.Text({
     text: message,
-    x: card.getAttr('x') + padding,
-    y: card.getAttr('y') + padding,
+    x: card.x() + padding,
+    y: card.y() + padding,
     width: card.width() - (padding * 2),
     height: card.height() - (padding * 2),
     listening: false,
@@ -45,22 +39,33 @@ export function createCard(message, config, listeners = {}) {
 
   const iconSize = 16;
   const del = new Konva.Image({
-    x: (config.x + card.width()) - (iconSize + padding),
-    y: (config.y + card.height()) - (iconSize + padding),
+    x: (card.x() + card.width()) - (iconSize + padding),
+    y: (card.y() + card.height()) - (iconSize + padding),
     width: iconSize,
     height: iconSize,
     image: imageDelete,
   });
   const share = new Konva.Image({
-    x: config.x + padding,
-    y: (config.y + card.height()) - (iconSize + padding),
+    x: card.x() + padding,
+    y: (card.y() + card.height()) - (iconSize + padding),
     width: iconSize,
     height: iconSize,
     image: imageShare,
   });
+  const toPublic = () => {
+    group.setOpacity(1.0);
+    group.on('dragmove', () => listeners.dragmove({
+      id: group.id(),
+      x: group.x(),
+      y: group.y(),
+      zIndex: group.getZIndex(),
+      fill: card.fill(),
+      text: text.text(),
+    }));
+  };
 
   group.add(card, text, del, share);
-  group.setZIndex(Date.now());
+  group.setZIndex(config.zIndex || Date.now());
 
   card.on('mouseenter', () => setCursorStyle(group, 'move'));
   card.on('mouseleave', () => setCursorStyle(group, 'default'));
@@ -82,18 +87,38 @@ export function createCard(message, config, listeners = {}) {
   share.on('mouseenter', () => setCursorStyle(group, 'pointer'));
   share.on('mouseleave', () => setCursorStyle(group, 'default'));
   share.on('click', () => {
-    group.setOpacity(1.0);
-    group.on('dragmove', () => listeners.dragmove({
+    toPublic();
+    share.remove();
+    listeners.public({
       id: group.id(),
       x: group.x(),
       y: group.y(),
       zIndex: group.getZIndex(),
       fill: card.fill(),
       text: text.text(),
-    }));
-    share.remove();
-    listeners.public();
+    }, group);
   });
 
+  if (isPublic) {
+    toPublic();
+    share.remove();
+  }
+
   return group;
+}
+
+export function loadImages() {
+  imageDelete.onload = () => { console.log('onload:imageDelete'); };
+  imageDelete.src = '/delete.png';
+
+  imageShare.onload = () => { console.log('onload:imageShare'); };
+  imageShare.src = '/share.png';
+}
+
+export function createPublicCard(message, config, listeners) {
+  return createCard(message, config, listeners, true);
+}
+
+export function createPrivateCard(message, config, listeners) {
+  return createCard(message, config, listeners, false);
 }

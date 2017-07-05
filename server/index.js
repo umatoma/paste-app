@@ -45,6 +45,9 @@ module.exports.createServer = (http) => {
   io.on('connection', (socket) => {
     console.log('a user connected');
 
+    socket.on('card:create', (...args) => {
+      socket.broadcast.emit('card:create', ...args);
+    });
     socket.on('card:dragmove', (...args) => {
       socket.broadcast.emit('card:dragmove', ...args);
     });

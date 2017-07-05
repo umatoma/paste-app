@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import Konva from 'konva';
 import io from 'socket.io-client';
-import { loadImages, createCard } from './shape-factory';
+import { loadImages, createPublicCard, createPrivateCard } from './shape-factory';
 
 const SCALE_STEP = 0.1;
 const MAX_SCALE = 2.0;
@@ -20,27 +20,53 @@ class BoardCanvas extends EventEmitter {
 
     // WebSocket
     this.socket = io();
-    this.socket.on('connect', () => {
-      console.log(`connect ${this.socket.id}`);
-    });
-    this.socket.on('card:dragmove', (attrs) => {
-      const node = this.stage.findOne(`#${attrs.id}`);
-      if (node) {
-        node.setAttrs(attrs);
-      } else {
-        const card = new Konva.Rect(Object.assign({
-          width: 128,
-          height: 128,
-          strokeEnabled: false,
-          shadowColor: 'gray',
-          shadowBlur: 4,
-          shadowOffset: { x: 2, y: 2 },
-          shadowOpacity: 0.5,
-        }, attrs));
-        this.publicLayer.add(card);
-      }
+    this.socket.on('connect', () => { console.log(`connect ${this.socket.id}`); });
+    this.socket.on('card:create', this.handleEmitCardCreate.bind(this));
+    this.socket.on('card:dragmove', this.handleEmitCardDragmove.bind(this));
+  }
+
+  handleEmitCardCreate({ id, x, y, zIndex, fill, text }) {
+    const node = this.stage.findOne(`#${id}`);
+    if (!node) {
+      const card = createPublicCard(text, { id, x, y, zIndex, fill }, {
+        dragmove: this.handleCardDragmove.bind(this),
+        public: this.handleCardPublic.bind(this),
+        destroyed: this.handleCardDestroyed.bind(this),
+      });
+      this.publicLayer.add(card);
       this.publicLayer.batchDraw();
-    });
+    }
+  }
+
+  handleEmitCardDragmove({ id, x, y, zIndex, fill, text }) {
+    const node = this.stage.findOne(`#${id}`);
+    if (node) {
+      node.setAttrs({ x, y, zIndex });
+    } else {
+      const card = createPublicCard(text, { id, x, y, zIndex, fill }, {
+        dragmove: this.handleCardDragmove.bind(this),
+        public: this.handleCardPublic.bind(this),
+        destroyed: this.handleCardDestroyed.bind(this),
+      });
+      this.publicLayer.add(card);
+    }
+    this.publicLayer.batchDraw();
+  }
+
+  handleCardDragmove(attrs) {
+    this.socket.emit('card:dragmove', attrs);
+  }
+
+  handleCardPublic(attrs, card) {
+    card.moveTo(this.publicLayer);
+    this.stage.draw();
+    this.socket.emit('card:create', attrs);
+    this.emit('card:movetopublic', card);
+  }
+
+  handleCardDestroyed(id) {
+    this.stage.draw();
+    this.emit('card:destroy', id);
   }
 
   setStageSize(width, height) {
@@ -52,21 +78,12 @@ class BoardCanvas extends EventEmitter {
     const randomInt = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
     const stage = this.stage;
     const scale = stage.scaleX();
-    const posX = (randomInt(24, 224) - stage.position().x) / scale;
-    const posY = (randomInt(24, stage.getHeight() - 376) - stage.position().y) / scale;
-    const card = createCard(message, { x: posX, y: posY, fill }, {
-      dragmove: (attrs) => {
-        this.socket.emit('card:dragmove', attrs);
-      },
-      public: () => {
-        card.moveTo(this.publicLayer);
-        this.stage.draw();
-        this.emit('card:movetopublic', card);
-      },
-      destroyed: (id) => {
-        this.stage.draw();
-        this.emit('card:destroy', id);
-      },
+    const posX = (randomInt(24, 124) - stage.position().x) / scale;
+    const posY = (randomInt(24, stage.getHeight() - 476) - stage.position().y) / scale;
+    const card = createPrivateCard(message, { x: posX, y: posY, fill }, {
+      dragmove: this.handleCardDragmove.bind(this),
+      public: this.handleCardPublic.bind(this),
+      destroyed: this.handleCardDestroyed.bind(this),
     });
     this.privateLayer.add(card);
     this.privateLayer.draw();
