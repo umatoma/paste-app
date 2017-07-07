@@ -51,6 +51,9 @@ module.exports.createServer = (http) => {
     socket.on('card:dragmove', (...args) => {
       socket.broadcast.emit('card:dragmove', ...args);
     });
+    socket.on('card:destroy', (...args) => {
+      socket.broadcast.emit('card:destroy', ...args);
+    });
   });
 
   return server;

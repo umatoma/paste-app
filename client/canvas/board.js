@@ -23,6 +23,7 @@ class BoardCanvas extends EventEmitter {
     this.socket.on('connect', () => { console.log(`connect ${this.socket.id}`); });
     this.socket.on('card:create', this.handleEmitCardCreate.bind(this));
     this.socket.on('card:dragmove', this.handleEmitCardDragmove.bind(this));
+    this.socket.on('card:destroy', this.handleEmitCardDestroy.bind(this));
   }
 
   handleEmitCardCreate({ id, x, y, zIndex, type, text }) {
@@ -32,7 +33,7 @@ class BoardCanvas extends EventEmitter {
       const card = createPublicCard({ id, x, y, zIndex, type, text }, {
         dragmove: this.handleCardDragmove.bind(this),
         public: this.handleCardPublic.bind(this),
-        destroyed: this.handleCardDestroyed.bind(this),
+        destroy: this.handleCardDestroy.bind(this),
       });
       this.publicLayer.add(card);
       this.publicLayer.batchDraw();
@@ -48,11 +49,20 @@ class BoardCanvas extends EventEmitter {
       const card = createPublicCard({ id, x, y, zIndex, type, text }, {
         dragmove: this.handleCardDragmove.bind(this),
         public: this.handleCardPublic.bind(this),
-        destroyed: this.handleCardDestroyed.bind(this),
+        destroy: this.handleCardDestroy.bind(this),
       });
       this.publicLayer.add(card);
     }
     this.publicLayer.batchDraw();
+  }
+
+  handleEmitCardDestroy({ id }) {
+    console.log('card:destroy', { id });
+    const node = this.stage.findOne(`#${id}`);
+    if (node) {
+      node.customDestroy();
+      this.publicLayer.batchDraw();
+    }
   }
 
   handleCardDragmove(attrs) {
@@ -66,9 +76,11 @@ class BoardCanvas extends EventEmitter {
     this.emit('card:movetopublic', card);
   }
 
-  handleCardDestroyed(id) {
+  handleCardDestroy(id, isPublic) {
     this.stage.draw();
-    this.emit('card:destroy', id);
+    if (isPublic) {
+      this.socket.emit('card:destroy', { id });
+    }
   }
 
   setStageSize(width, height) {
@@ -85,7 +97,7 @@ class BoardCanvas extends EventEmitter {
     const card = createPrivateCard({ x, y, type, text }, {
       dragmove: this.handleCardDragmove.bind(this),
       public: this.handleCardPublic.bind(this),
-      destroyed: this.handleCardDestroyed.bind(this),
+      destroy: this.handleCardDestroy.bind(this),
     });
     this.privateLayer.add(card);
     this.privateLayer.draw();

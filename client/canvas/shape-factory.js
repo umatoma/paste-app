@@ -68,7 +68,22 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
     height: iconSize,
     image: imageShare,
   });
-  const toPublic = () => {
+
+  group.add(card, message, del, share);
+  group.setZIndex(zIndex || Date.now());
+  group.isPublic = false;
+  group.customDestroy = () => {
+    const _id = group.id(); // eslint-disable-line
+    const isPublic = group.isPublic;
+    del.off('mouseenter mouseleave');
+    share.off('mouseenter mouseleave');
+    group.getStage().container().style.cursor = 'default';
+    group.destroyChildren();
+    group.destroy();
+    listeners.destroy(_id, isPublic);
+  };
+  group.customToPublic = () => {
+    group.isPublic = true;
     group.setOpacity(1.0);
     group.on('dragmove', () => listeners.dragmove({
       id: group.id(),
@@ -80,9 +95,6 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
     }));
   };
 
-  group.add(card, message, del, share);
-  group.setZIndex(zIndex || Date.now());
-
   card.on('mouseenter', () => setCursorStyle(group, 'move'));
   card.on('mouseleave', () => setCursorStyle(group, 'default'));
   card.on('mousedown', () => {
@@ -91,19 +103,11 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
   });
   del.on('mouseenter', () => setCursorStyle(group, 'pointer'));
   del.on('mouseleave', () => setCursorStyle(group, 'default'));
-  del.on('click', () => {
-    const _id = group.id(); // eslint-disable-line
-    del.off('mouseenter mouseleave');
-    share.off('mouseenter mouseleave');
-    group.getStage().container().style.cursor = 'default';
-    group.destroyChildren();
-    group.destroy();
-    listeners.destroyed(_id);
-  });
+  del.on('click', () => group.customDestroy());
   share.on('mouseenter', () => setCursorStyle(group, 'pointer'));
   share.on('mouseleave', () => setCursorStyle(group, 'default'));
   share.on('click', () => {
-    toPublic();
+    group.customToPublic();
     share.remove();
     listeners.public({
       id: group.id(),
@@ -116,7 +120,7 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
   });
 
   if (isPublic) {
-    toPublic();
+    group.customToPublic();
     share.remove();
   }
 
