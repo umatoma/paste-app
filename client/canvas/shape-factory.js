@@ -1,10 +1,10 @@
 import Konva from 'konva';
 import uuidv4 from 'uuid/v4';
 
-const CARD_TYPES = {
-  blue: { fill: 'hsl(217, 71%, 53%)' },
-  green: { fill: 'hsl(141,71%, 48%)' },
-  red: { fill: 'hsl(48, 100%, 67%)' },
+const SHAPE_TYPES = {
+  mideum_blue: { fill: 'hsl(217, 71%, 53%)' },
+  mideum_green: { fill: 'hsl(141,71%, 48%)' },
+  mideum_red: { fill: 'hsl(48, 100%, 67%)' },
 };
 
 const imageDelete = new Image();
@@ -28,7 +28,7 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
   const card = new Konva.Rect({
     x: 0,
     y: 0,
-    fill: CARD_TYPES[type].fill,
+    fill: SHAPE_TYPES[type].fill,
     width: 128,
     height: 128,
     strokeEnabled: false,

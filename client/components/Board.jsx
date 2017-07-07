@@ -86,7 +86,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-info"
-                onClick={() => this.addPrivateCard('blue')}
+                onClick={() => this.addPrivateCard('mideum_blue')}
               >
                 BLUE
               </button>
@@ -94,7 +94,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-success"
-                onClick={() => this.addPrivateCard('green')}
+                onClick={() => this.addPrivateCard('mideum_green')}
               >
                 GREEN
               </button>
@@ -102,7 +102,7 @@ class Board extends React.Component {
             <div className="column">
               <button
                 className="button is-fullwidth is-warning"
-                onClick={() => this.addPrivateCard('red')}
+                onClick={() => this.addPrivateCard('mideum_red')}
               >
                 YELLOW
               </button>
