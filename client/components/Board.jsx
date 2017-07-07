@@ -8,7 +8,10 @@ class Board extends React.Component {
     this.boardCanvas = null;
     this.state = {
       cardMessage: '',
+      cardSize: 'medium',
     };
+    this.handleChangeCardSize = this.handleChangeCardSize.bind(this);
+    this.handleOnClickCardButton = this.handleOnClickCardButton.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +40,14 @@ class Board extends React.Component {
     this.boardCanvas.setStageSize(window.innerWidth, window.innerHeight);
   }
 
+  handleChangeCardSize(event) {
+    this.setState({ cardSize: event.target.value });
+  }
+
+  handleOnClickCardButton(event) {
+    this.addPrivateCard(`${this.state.cardSize}_${event.target.value}`);
+  }
+
   addPrivateCard(type) {
     const message = this.state.cardMessage;
     this.boardCanvas.addPrivateCard(message, type);
@@ -44,6 +55,7 @@ class Board extends React.Component {
   }
 
   render() {
+    const { cardSize } = this.state;
     return (
       <div>
         <div ref={(element) => { this.container = element; }} />
@@ -82,30 +94,28 @@ class Board extends React.Component {
               />
             </p>
           </div>
+          <div className="field">
+            <p className="control">
+              <label className="radio">
+                <input type="radio" name="size" value="medium" checked={cardSize === 'medium'} onChange={this.handleChangeCardSize} /> Medium
+              </label>
+              <label className="radio">
+                <input type="radio" name="size" value="large" checked={cardSize === 'large'} onChange={this.handleChangeCardSize} /> Large
+              </label>
+              <label className="radio">
+                <input type="radio" name="size" value="small" checked={cardSize === 'small'} onChange={this.handleChangeCardSize} /> Small
+              </label>
+            </p>
+          </div>
           <div className="columns">
             <div className="column">
-              <button
-                className="button is-fullwidth is-info"
-                onClick={() => this.addPrivateCard('mideum_blue')}
-              >
-                BLUE
-              </button>
+              <input type="button" value="blue" className="button is-fullwidth is-info" onClick={this.handleOnClickCardButton} />
             </div>
             <div className="column">
-              <button
-                className="button is-fullwidth is-success"
-                onClick={() => this.addPrivateCard('mideum_green')}
-              >
-                GREEN
-              </button>
+              <input type="button" value="green" className="button is-fullwidth is-success" onClick={this.handleOnClickCardButton} />
             </div>
             <div className="column">
-              <button
-                className="button is-fullwidth is-warning"
-                onClick={() => this.addPrivateCard('mideum_red')}
-              >
-                YELLOW
-              </button>
+              <input type="button" value="red" className="button is-fullwidth is-warning" onClick={this.handleOnClickCardButton} />
             </div>
           </div>
         </div>

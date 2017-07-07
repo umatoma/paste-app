@@ -2,9 +2,15 @@ import Konva from 'konva';
 import uuidv4 from 'uuid/v4';
 
 const SHAPE_TYPES = {
-  mideum_blue: { fill: 'hsl(217, 71%, 53%)' },
-  mideum_green: { fill: 'hsl(141,71%, 48%)' },
-  mideum_red: { fill: 'hsl(48, 100%, 67%)' },
+  medium_blue: { fill: 'hsl(217, 71%, 53%)', size: 128 },
+  medium_green: { fill: 'hsl(141,71%, 48%)', size: 128 },
+  medium_red: { fill: 'hsl(48, 100%, 67%)', size: 128 },
+  large_blue: { fill: 'hsl(217, 71%, 53%)', size: 192 },
+  large_green: { fill: 'hsl(141,71%, 48%)', size: 192 },
+  large_red: { fill: 'hsl(48, 100%, 67%)', size: 192 },
+  small_blue: { fill: 'hsl(217, 71%, 53%)', size: 96 },
+  small_green: { fill: 'hsl(141,71%, 48%)', size: 96 },
+  small_red: { fill: 'hsl(48, 100%, 67%)', size: 96 },
 };
 
 const imageDelete = new Image();
@@ -20,8 +26,8 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
     name: type,
     x,
     y,
-    width: 128,
-    height: 128,
+    width: SHAPE_TYPES[type].size,
+    height: SHAPE_TYPES[type].size,
     draggable: true,
     opacity: 0.5,
   });
@@ -29,8 +35,8 @@ function createCard({ id, x, y, type, zIndex, text }, listeners, isPublic) {
     x: 0,
     y: 0,
     fill: SHAPE_TYPES[type].fill,
-    width: 128,
-    height: 128,
+    width: SHAPE_TYPES[type].size,
+    height: SHAPE_TYPES[type].size,
     strokeEnabled: false,
     shadowColor: 'gray',
     shadowBlur: 4,

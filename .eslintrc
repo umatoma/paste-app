@@ -8,6 +8,7 @@
     "Image": true
   },
   "rules": {
-    "no-console": "off"
+    "no-console": "off",
+    "jsx-a11y/label-has-for": "off",
   }
 }
