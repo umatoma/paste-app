@@ -4,13 +4,13 @@ import uuidv4 from 'uuid/v4';
 const SHAPE_TYPES = {
   medium_blue: { fill: 'hsl(217, 71%, 53%)', size: 128 },
   medium_green: { fill: 'hsl(141,71%, 48%)', size: 128 },
-  medium_red: { fill: 'hsl(48, 100%, 67%)', size: 128 },
+  medium_yellow: { fill: 'hsl(48, 100%, 67%)', size: 128 },
   large_blue: { fill: 'hsl(217, 71%, 53%)', size: 192 },
   large_green: { fill: 'hsl(141,71%, 48%)', size: 192 },
-  large_red: { fill: 'hsl(48, 100%, 67%)', size: 192 },
+  large_yellow: { fill: 'hsl(48, 100%, 67%)', size: 192 },
   small_blue: { fill: 'hsl(217, 71%, 53%)', size: 96 },
   small_green: { fill: 'hsl(141,71%, 48%)', size: 96 },
-  small_red: { fill: 'hsl(48, 100%, 67%)', size: 96 },
+  small_yellow: { fill: 'hsl(48, 100%, 67%)', size: 96 },
 };
 
 const imageDelete = new Image();

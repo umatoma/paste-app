@@ -115,7 +115,7 @@ class Board extends React.Component {
               <input type="button" value="green" className="button is-fullwidth is-success" onClick={this.handleOnClickCardButton} />
             </div>
             <div className="column">
-              <input type="button" value="red" className="button is-fullwidth is-warning" onClick={this.handleOnClickCardButton} />
+              <input type="button" value="yellow" className="button is-fullwidth is-warning" onClick={this.handleOnClickCardButton} />
             </div>
           </div>
         </div>
