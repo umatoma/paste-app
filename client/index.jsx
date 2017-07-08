@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Board from './components/Board';
+import Routes from './components/Routes';
 
 ReactDOM.render(
-  <Board />,
+  <Routes />,
   document.getElementById('root'),
 );

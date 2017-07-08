@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { BoardCanvas } from '../canvas';
 
 class Board extends React.Component {
@@ -56,9 +56,11 @@ class Board extends React.Component {
 
   render() {
     const { cardSize } = this.state;
+    const { boardId } = this.props.match.params;
     return (
       <div>
         <div ref={(element) => { this.container = element; }} />
+        <h1 className="title" style={{ position: 'fixed', top: 24, right: 24 }}>{boardId}</h1>
         <div style={{ position: 'fixed', top: 24, left: 24 }}>
           <div className="field">
             <button
@@ -123,5 +125,9 @@ class Board extends React.Component {
     );
   }
 }
+
+Board.propTypes = {
+  match: PropTypes.object.isRequired,
+};
 
 export default Board;
