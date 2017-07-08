@@ -8,9 +8,10 @@ const MAX_SCALE = 2.0;
 const MIN_SCALE = 0.5;
 
 class BoardCanvas extends EventEmitter {
-  constructor(stageOption = {}) {
+  constructor(stageOption = {}, boardId) {
     super();
     loadImages();
+    this.boardId = boardId;
     this.stage = new Konva.Stage(Object.assign({
       draggable: true,
     }, stageOption));
@@ -24,6 +25,13 @@ class BoardCanvas extends EventEmitter {
     this.socket.on('card:create', this.handleEmitCardCreate.bind(this));
     this.socket.on('card:dragmove', this.handleEmitCardDragmove.bind(this));
     this.socket.on('card:destroy', this.handleEmitCardDestroy.bind(this));
+
+    // Join Board
+    this.socketEmit('board:join');
+  }
+
+  socketEmit(event, params) {
+    this.socket.emit(event, Object.assign({ boardId: this.boardId }, params));
   }
 
   handleEmitCardCreate({ id, x, y, zIndex, type, text }) {
@@ -66,20 +74,20 @@ class BoardCanvas extends EventEmitter {
   }
 
   handleCardDragmove(attrs) {
-    this.socket.emit('card:dragmove', attrs);
+    this.socketEmit('card:dragmove', attrs);
   }
 
   handleCardPublic(attrs, card) {
     card.moveTo(this.publicLayer);
     this.stage.draw();
-    this.socket.emit('card:create', attrs);
+    this.socketEmit('card:create', attrs);
     this.emit('card:movetopublic', card);
   }
 
   handleCardDestroy(id, isPublic) {
     this.stage.draw();
     if (isPublic) {
-      this.socket.emit('card:destroy', { id });
+      this.socketEmit('card:destroy', { id });
     }
   }
 

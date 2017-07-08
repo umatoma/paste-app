@@ -14,11 +14,12 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
+    const { boardId } = this.props.match.params;
     this.boardCanvas = new BoardCanvas({
       container: this.container,
       width: window.innerWidth,
       height: window.innerHeight,
-    });
+    }, boardId);
     this.boardCanvas.on('card:addprivate', (card) => {
       console.log('card:addprivate', card);
     });

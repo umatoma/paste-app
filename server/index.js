@@ -45,14 +45,19 @@ module.exports.createServer = (http) => {
   io.on('connection', (socket) => {
     console.log('a user connected');
 
-    socket.on('card:create', (...args) => {
-      socket.broadcast.emit('card:create', ...args);
+    socket.on('board:join', ({ boardId }) => {
+      console.log('board:join', boardId);
+      socket.join(boardId);
+      socket.broadcast.to(boardId).emit('board:join', { boardId });
     });
-    socket.on('card:dragmove', (...args) => {
-      socket.broadcast.emit('card:dragmove', ...args);
+    socket.on('card:create', (args) => {
+      socket.broadcast.to(args.boardId).emit('card:create', args);
     });
-    socket.on('card:destroy', (...args) => {
-      socket.broadcast.emit('card:destroy', ...args);
+    socket.on('card:dragmove', (args) => {
+      socket.broadcast.to(args.boardId).emit('card:dragmove', args);
+    });
+    socket.on('card:destroy', (args) => {
+      socket.broadcast.to(args.boardId).emit('card:destroy', args);
     });
   });
 
