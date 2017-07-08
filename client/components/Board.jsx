@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { BoardCanvas } from '../canvas';
+import FormCardCreate from './FormCardCreate';
 
 class Board extends React.Component {
   constructor() {
@@ -10,8 +11,6 @@ class Board extends React.Component {
       cardMessage: '',
       cardSize: 'medium',
     };
-    this.handleChangeCardSize = this.handleChangeCardSize.bind(this);
-    this.handleOnClickCardButton = this.handleOnClickCardButton.bind(this);
   }
 
   componentDidMount() {
@@ -40,22 +39,17 @@ class Board extends React.Component {
     this.boardCanvas.setStageSize(window.innerWidth, window.innerHeight);
   }
 
-  handleChangeCardSize(event) {
-    this.setState({ cardSize: event.target.value });
-  }
-
   handleOnClickCardButton(event) {
     this.addPrivateCard(`${this.state.cardSize}_${event.target.value}`);
   }
 
-  addPrivateCard(type) {
-    const message = this.state.cardMessage;
+  addPrivateCard({ message, size, color }) {
+    const type = `${size}_${color}`;
     this.boardCanvas.addPrivateCard(message, type);
     this.setState({ cardMessage: '' });
   }
 
   render() {
-    const { cardSize } = this.state;
     const { boardId } = this.props.match.params;
     return (
       <div>
@@ -83,44 +77,14 @@ class Board extends React.Component {
             </button>
           </div>
         </div>
-        <div style={{ position: 'fixed', bottom: 24, left: 24 }}>
-          <div className="field">
-            <label className="label" htmlFor="card">Card Message</label>
-            <p className="control" style={{ width: 320 }}>
-              <textarea
-                name="card"
-                className="textarea"
-                placeholder="..."
-                value={this.state.cardMessage}
-                onChange={event => this.setState({ cardMessage: event.target.value })}
-              />
-            </p>
-          </div>
-          <div className="field">
-            <p className="control">
-              <label className="radio">
-                <input type="radio" name="size" value="medium" checked={cardSize === 'medium'} onChange={this.handleChangeCardSize} /> Medium
-              </label>
-              <label className="radio">
-                <input type="radio" name="size" value="large" checked={cardSize === 'large'} onChange={this.handleChangeCardSize} /> Large
-              </label>
-              <label className="radio">
-                <input type="radio" name="size" value="small" checked={cardSize === 'small'} onChange={this.handleChangeCardSize} /> Small
-              </label>
-            </p>
-          </div>
-          <div className="columns">
-            <div className="column">
-              <input type="button" value="blue" className="button is-fullwidth is-info" onClick={this.handleOnClickCardButton} />
-            </div>
-            <div className="column">
-              <input type="button" value="green" className="button is-fullwidth is-success" onClick={this.handleOnClickCardButton} />
-            </div>
-            <div className="column">
-              <input type="button" value="yellow" className="button is-fullwidth is-warning" onClick={this.handleOnClickCardButton} />
-            </div>
-          </div>
-        </div>
+        <FormCardCreate
+          style={{ position: 'fixed', bottom: 24, left: 24 }}
+          message={this.state.cardMessage}
+          size={this.state.cardSize}
+          onChangeMessage={value => this.setState({ cardMessage: value })}
+          onChangeSize={value => this.setState({ cardSize: value })}
+          onClickCreate={({ message, size, color }) => this.addPrivateCard({ message, size, color })}
+        />
       </div>
     );
   }
