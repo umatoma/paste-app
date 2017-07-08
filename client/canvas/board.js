@@ -22,6 +22,7 @@ class BoardCanvas extends EventEmitter {
     // WebSocket
     this.socket = io();
     this.socket.on('connect', () => { console.log(`connect ${this.socket.id}`); });
+    this.socket.on('board:update', this.handleBoardUpdate.bind(this));
     this.socket.on('card:create', this.handleEmitCardCreate.bind(this));
     this.socket.on('card:dragmove', this.handleEmitCardDragmove.bind(this));
     this.socket.on('card:destroy', this.handleEmitCardDestroy.bind(this));
@@ -32,6 +33,12 @@ class BoardCanvas extends EventEmitter {
 
   socketEmit(event, params) {
     this.socket.emit(event, Object.assign({ boardId: this.boardId }, params));
+  }
+
+  handleBoardUpdate(nodes) {
+    nodes.forEach((node) => {
+      this.handleEmitCardCreate(node);
+    });
   }
 
   handleEmitCardCreate({ id, x, y, zIndex, type, text }) {
