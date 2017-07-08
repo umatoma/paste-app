@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { BoardCanvas } from '../canvas';
+import BoardButtons from './BoardButtons';
 import FormCardCreate from './FormCardCreate';
 
 class Board extends React.Component {
@@ -56,28 +57,11 @@ class Board extends React.Component {
       <div>
         <div ref={(element) => { this.container = element; }} />
         <h1 className="title" style={{ position: 'fixed', top: 24, right: 24 }}>{boardId}</h1>
-        <div style={{ position: 'fixed', top: 24, left: 24 }}>
-          <div className="field">
-            <button
-              className="button is-medium"
-              onClick={() => this.boardCanvas.zoomInStage()}
-            >
-              <span className="icon is-medium">
-                <i className="fa fa-plus" />
-              </span>
-            </button>
-          </div>
-          <div className="field">
-            <button
-              className="button is-medium"
-              onClick={() => this.boardCanvas.zoomOutStage()}
-            >
-              <span className="icon is-medium">
-                <i className="fa fa-minus" />
-              </span>
-            </button>
-          </div>
-        </div>
+        <BoardButtons
+          style={{ position: 'fixed', top: 24, left: 24 }}
+          onClickZoomIn={() => this.boardCanvas.zoomInStage()}
+          onClickZoomOut={() => this.boardCanvas.zoomOutStage()}
+        />
         <FormCardCreate
           style={{ position: 'fixed', bottom: 24, left: 24 }}
           message={this.state.cardMessage}
