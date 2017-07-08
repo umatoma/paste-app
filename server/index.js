@@ -1,14 +1,21 @@
+const Promise = require('bluebird');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const redis = require('redis');
 const socketIO = require('socket.io');
+const socketHandler = require('./socket-handler');
+
+Promise.promisifyAll(redis.RedisClient.prototype);
+Promise.promisifyAll(redis.Multi.prototype);
 
 module.exports.createServer = (http) => {
   const app = express();
   const server = http.Server(app);
   const io = socketIO(server);
+  const redisClient = redis.createClient();
 
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'ejs');
@@ -42,24 +49,7 @@ module.exports.createServer = (http) => {
   });
 
   // WebSocket
-  io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('board:join', ({ boardId }) => {
-      console.log('board:join', boardId);
-      socket.join(boardId);
-      socket.broadcast.to(boardId).emit('board:join', { boardId });
-    });
-    socket.on('card:create', (args) => {
-      socket.broadcast.to(args.boardId).emit('card:create', args);
-    });
-    socket.on('card:dragmove', (args) => {
-      socket.broadcast.to(args.boardId).emit('card:dragmove', args);
-    });
-    socket.on('card:destroy', (args) => {
-      socket.broadcast.to(args.boardId).emit('card:destroy', args);
-    });
-  });
+  io.on('connection', socketHandler.onConnection(redisClient));
 
   return server;
 };

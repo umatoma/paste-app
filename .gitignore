@@ -93,3 +93,4 @@ package-lock.json
 # End of https://www.gitignore.io/api/node,macos
 
 /server/public
+/dump.rdb
